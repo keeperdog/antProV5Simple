@@ -20,6 +20,10 @@
   },
   {
     path: '/welcome',
+    layout: false,
+    // headerRender: true,
+    // menuHeaderRender: false,
+    // menuRender: false,
     name: 'welcome',
     icon: 'smile',
     component: './Welcome',
