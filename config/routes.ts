@@ -20,7 +20,7 @@
   },
   {
     path: '/welcome',
-    layout: false,
+    layout: true,
     // headerRender: true,
     // menuHeaderRender: false,
     // menuRender: false,
