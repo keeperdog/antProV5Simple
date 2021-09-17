@@ -4,7 +4,7 @@ import type { RunTimeLayoutConfig } from 'umi';
 import { history } from 'umi';
 import RightContent from '@/components/RightContent';
 import Footer from '@/components/Footer';
-import { getUserInfo, getEnterprisesList } from './services/ant-design-pro/login';
+import { getUserInfo, getEnterprisesList, tokenRefresh } from './services/ant-design-pro/login';
 // import { BookOutlined, LinkOutlined } from '@ant-design/icons';
 
 // const isDev = process.env.NODE_ENV === 'development';
@@ -25,6 +25,28 @@ export async function getInitialState(): Promise<{
   fetchUserInfo?: () => Promise<API.CurrentUser | undefined>;
   fetchEnterpriselist?: () => Promise<{ data: Record<string, any>[] }>;
 }> {
+  const refreshToken = JSON.parse(localStorage.getItem('refreshToken') || '{}');
+  const tokenInfo = JSON.parse(sessionStorage.getItem('tokenInfo') || '{}');
+
+  if (refreshToken?.userId && !tokenInfo?.userId) {
+    const refreshRes = await tokenRefresh({
+      refreshToken: JSON.parse(localStorage.getItem('refreshToken') ?? '{}')
+        .refreshToken?.split(' ')
+        ?.pop(),
+    });
+    if (refreshRes?.userId) {
+      const {
+        userId,
+        auth: { tokenType, token, refreshToken: newRefreshToken },
+      } = refreshRes;
+      sessionStorage.setItem('tokenInfo', JSON.stringify({ userId, token: tokenType + token }));
+      localStorage.setItem(
+        'refreshToken',
+        JSON.stringify({ userId, refreshToken: tokenType + newRefreshToken }),
+      );
+    }
+  }
+
   const fetchUserInfo = async () => {
     try {
       return await getUserInfo();
@@ -55,6 +77,7 @@ export async function getInitialState(): Promise<{
       settings: {},
     };
   }
+
   return {
     fetchUserInfo,
     fetchEnterpriselist,
@@ -73,8 +96,11 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
     footerRender: () => <Footer />,
     onPageChange: () => {
       const { location } = history;
+      const refreshToken = JSON.parse(localStorage.getItem('refreshToken') || '{}');
+      const tokenInfo = JSON.parse(sessionStorage.getItem('tokenInfo') || '{}');
+      const isLogin = tokenInfo?.userId || refreshToken?.userId;
       // 如果没有登录，重定向到 login
-      if (!initialState?.currentUser && location.pathname !== loginPath) {
+      if (!isLogin && location.pathname !== loginPath) {
         history.push(loginPath);
       }
     },

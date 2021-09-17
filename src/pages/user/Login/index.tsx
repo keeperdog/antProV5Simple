@@ -1,11 +1,12 @@
 import { createFromIconfontCN } from '@ant-design/icons';
 import { Alert, message, Button, Typography, Row, Result } from 'antd';
-import React, { useLayoutEffect, useRef, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import type { ProFormInstance } from '@ant-design/pro-form';
 import ProForm, { ProFormCheckbox, ProFormText } from '@ant-design/pro-form';
 import { Link, history, SelectLang, useModel } from 'umi';
 import Footer from '@/components/Footer';
 import InputGroup from 'react-input-groups';
+import 'react-input-groups/lib/css/styles.css';
 import logo from '@/assets/logo_horizontal.png';
 import {
   userRegister,
@@ -56,6 +57,12 @@ const Login: React.FC = () => {
   const inputGroupRef = useRef<any>();
 
   const [, forceUpdate] = useState({});
+
+  useEffect(() => {
+    if (localStorage.getItem('refreshToken') || sessionStorage.getItem('tokenInfo')) {
+      history.push('/');
+    }
+  }, []);
 
   useLayoutEffect(() => {
     let isUnmounted = false;
@@ -369,6 +376,7 @@ const Login: React.FC = () => {
                     // onBlur: () => setloginError(false),
                     size: 'large',
                     allowClear: true,
+                    autoComplete: '',
                     // prefix: <LockOutlined className={styles.prefixIcon} />,
                   }}
                   placeholder="密码"
@@ -482,7 +490,7 @@ const Login: React.FC = () => {
                         setType('registerUserInfo');
                       } else {
                         inputGroupRef.current.textChange(defautlSmsCode);
-                        message.info('验证码错误，请重新输入');
+                        message.error(resVerify?.message ?? '验证码错误，请重新输入');
                       }
                     }
                   }}
