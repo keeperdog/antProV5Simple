@@ -51,7 +51,7 @@ export type mobileVerifyData = {
 //   });
 // }
 
-export async function queryCurrent(): Promise<any> {
+export async function getUserInfo(): Promise<any> {
   const { userId, token } = JSON.parse(sessionStorage.getItem('tokenInfo') ?? '{}');
   return request(`/v1/users/${userId}`, {
     headers: {
