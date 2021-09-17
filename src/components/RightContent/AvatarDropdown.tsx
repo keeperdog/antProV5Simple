@@ -1,5 +1,11 @@
 import React, { useCallback } from 'react';
-import { LogoutOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
+import {
+  CheckOutlined,
+  LogoutOutlined,
+  PlusOutlined,
+  SettingOutlined,
+  UserOutlined,
+} from '@ant-design/icons';
 import { Avatar, Menu, Spin } from 'antd';
 import { history, useModel } from 'umi';
 import { stringify } from 'querystring';
@@ -7,6 +13,7 @@ import HeaderDropdown from '../HeaderDropdown';
 import styles from './index.less';
 import { outLogin } from '@/services/ant-design-pro/api';
 import type { MenuInfo } from 'rc-menu/lib/interface';
+import { updateEnterprise } from '@/services/ant-design-pro/login';
 
 export type GlobalHeaderRightProps = {
   menu?: boolean;
@@ -62,7 +69,7 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
     return loading;
   }
 
-  const { currentUser } = initialState;
+  const { currentUser, enterpriseList } = initialState;
 
   if (!currentUser || !currentUser.name) {
     return loading;
@@ -82,7 +89,53 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
           个人设置
         </Menu.Item>
       )}
-      {menu && <Menu.Divider />}
+      <Menu.SubMenu key="enterprise" icon={<SettingOutlined />} title="企业切换">
+        <div style={{ maxHeight: 240, overflow: 'auto' }}>
+          {enterpriseList?.map((r: any) => (
+            <div
+              style={{
+                color: r?.defaultEnterprise ? '#2C7BE5' : 'initial',
+                height: 40,
+              }}
+              className="pl10 pr10 cursor-pointer"
+              key={r?.id}
+              onClick={async () => {
+                if (r?.defaultEnterprise) return;
+                await updateEnterprise({
+                  enterpriseId: r.id,
+                  defaultEnterprise: true,
+                }).then(async (res) => {
+                  if (res?.id) {
+                    const enterpriseRes = await initialState?.fetchEnterpriselist?.();
+                    if (enterpriseRes?.data) {
+                      await setInitialState((s) => ({
+                        ...s,
+                        enterpriseList: enterpriseRes.data,
+                      }));
+                    }
+                  }
+                });
+              }}
+            >
+              <span title={r?.name}>
+                {r?.name?.length <= 10 ? r?.name : `${r?.name?.substr(0, 10)}...`}
+              </span>
+              {r?.defaultEnterprise && <CheckOutlined className="ml10" />}
+            </div>
+          ))}
+        </div>
+        <Menu.Divider />
+        <Menu.Item
+          onClick={() => {
+            (document.querySelector('#createEnterpriseBtn') as HTMLElement)?.click();
+          }}
+          icon={<PlusOutlined />}
+          key="10"
+        >
+          创建企业
+        </Menu.Item>
+      </Menu.SubMenu>
+      <Menu.Divider />
 
       <Menu.Item key="logout">
         <LogoutOutlined />
