@@ -1,8 +1,99 @@
-@import '~antd/lib/style/themes/default.less';
+@import '~antd/es/style/themes/default.less';
 
-.pre {
-  margin: 12px 0;
-  padding: 12px 20px;
-  background: @input-bg;
-  box-shadow: @card-shadow;
+@topLeftWidth: 343px;
+@topRightWidth: 686px;
+
+@bottomWidth: @topLeftWidth+ @topRightWidth;
+@white: #fff;
+@black: #000;
+
+.main {
+  height: calc(100vh - 0px);
+  // margin: -24px;
+  background-color: white;
+  .header {
+    display: flex;
+    justify-content: space-between;
+    .logo {
+      height: 44px;
+      margin-right: 16px;
+      vertical-align: top;
+    }
+    .lang {
+      width: 100%;
+      height: 40px;
+      line-height: 44px;
+      text-align: right;
+      :global(.ant-dropdown-trigger) {
+        margin-right: 24px;
+      }
+    }
+  }
+  :global {
+    .wrapper {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      .top {
+        display: flex;
+        flex: 1;
+        align-items: center;
+        justify-content: center;
+        .left {
+          width: @topLeftWidth;
+          margin-top: -48px;
+        }
+        .right {
+          width: @topRightWidth;
+          margin-top: -48px;
+        }
+      }
+      .bottom {
+        flex: 1;
+        width: @bottomWidth;
+        margin: 0 auto;
+        .feature {
+          display: flex;
+          justify-content: space-between;
+          width: 100%;
+          .feat1 {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 124px;
+            height: 140px;
+            background: #8255ff;
+            border-radius: 3px;
+          }
+          .feat2 {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 124px;
+            height: 140px;
+            background: #ff7ead;
+            border-radius: 4px;
+          }
+          .feat3 {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 124px;
+            height: 140px;
+            background: #508aff;
+            border-radius: 4px;
+          }
+          .feat4 {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 124px;
+            height: 140px;
+            background: #ffc355;
+            border-radius: 4px;
+          }
+        }
+      }
+    }
+  }
 }

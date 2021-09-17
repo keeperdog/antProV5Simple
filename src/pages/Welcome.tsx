@@ -1,63 +1,169 @@
 import React from 'react';
-import { PageContainer } from '@ant-design/pro-layout';
-import { Card, Alert, Typography } from 'antd';
-import { useIntl, FormattedMessage } from 'umi';
+import { Typography, Button, message, Space, Modal } from 'antd';
 import styles from './Welcome.less';
+import { ModalForm, ProFormSelect, ProFormText } from '@ant-design/pro-form';
+import { createEnterprises, getEnterprisesDict } from '@/services/ant-design-pro/login';
+import welcomeBgm from '@/assets/welcome2.png';
+import { Link, useModel } from 'umi';
+import logo from '../assets/logo_horizontal.png';
+import RightContent from '@/components/RightContent/index';
+// import { connect } from 'umi';
+// import type { ConnectState } from '@/models/connect';
 
-const CodePreview: React.FC = ({ children }) => (
-  <pre className={styles.pre}>
-    <code>
-      <Typography.Text copyable>{children}</Typography.Text>
-    </code>
-  </pre>
-);
+const primaryBtnSty = { backgroundColor: '#00D2B2', borderColor: '#00D2B2' };
+const ghostBtnSty = { borderColor: '#00D2B2', color: '#00D2B2' };
 
-export default (): React.ReactNode => {
-  const intl = useIntl();
+const Welcomme: React.FC = () => {
+  const { initialState, setInitialState } = useModel('@@initialState');
+
   return (
-    <PageContainer>
-      <Card>
-        <Alert
-          message={intl.formatMessage({
-            id: 'pages.welcome.alertMessage',
-            defaultMessage: 'Faster and stronger heavy-duty components have been released.',
-          })}
-          type="success"
-          showIcon
-          banner
-          style={{
-            margin: -12,
-            marginBottom: 24,
-          }}
-        />
-        <Typography.Text strong>
-          <FormattedMessage id="pages.welcome.advancedComponent" defaultMessage="Advanced Form" />{' '}
-          <a
-            href="https://procomponents.ant.design/components/table"
-            rel="noopener noreferrer"
-            target="__blank"
-          >
-            <FormattedMessage id="pages.welcome.link" defaultMessage="Welcome" />
-          </a>
-        </Typography.Text>
-        <CodePreview>yarn add @ant-design/pro-table</CodePreview>
-        <Typography.Text
-          strong
-          style={{
-            marginBottom: 12,
-          }}
-        >
-          <FormattedMessage id="pages.welcome.advancedLayout" defaultMessage="Advanced layout" />{' '}
-          <a
-            href="https://procomponents.ant.design/components/layout"
-            rel="noopener noreferrer"
-            target="__blank"
-          >
-            <FormattedMessage id="pages.welcome.link" defaultMessage="Welcome" />
-          </a>
-        </Typography.Text>
-        <CodePreview>yarn add @ant-design/pro-layout</CodePreview>
-      </Card>
-    </PageContainer>
+    <div className={styles.main}>
+      <div className={styles.header}>
+        <Link to="/">
+          <img alt="logo" className={styles.logo} src={logo} />
+        </Link>
+        <div className={styles.lang}>
+          <RightContent />
+        </div>
+      </div>
+      <div className="wrapper">
+        <div className="top">
+          <div className="left">
+            <Typography.Title>团队使用效率更高效</Typography.Title>
+            <Typography.Paragraph style={{ width: 300, height: 54 }}>
+              文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文案文文案文案文案文
+            </Typography.Paragraph>
+            <Space size="large" style={{ marginTop: '20px' }}>
+              <ModalForm<{
+                name: string;
+                scale: string;
+              }>
+                title="创建企业"
+                layout="horizontal"
+                width={520}
+                preserve={false}
+                labelCol={{ span: 6 }}
+                wrapperCol={{ span: 14 }}
+                trigger={
+                  <Button
+                    id="createEnterpriseBtn"
+                    style={{ ...primaryBtnSty }}
+                    type="primary"
+                    shape="round"
+                  >
+                    创建企业
+                  </Button>
+                }
+                modalProps={{
+                  destroyOnClose: true,
+                  okText: '创建',
+                }}
+                onFinish={async (values) => {
+                  await createEnterprises({
+                    name: values.name,
+                    ...JSON.parse(values.scale),
+                  });
+                  const enterpriseRes = await initialState?.fetchEnterpriselist?.();
+                  if (enterpriseRes?.data) {
+                    await setInitialState((s) => ({
+                      ...s,
+                      enterpriseList: enterpriseRes.data,
+                    }));
+                  }
+                  message.success('创建成功');
+                  return true;
+                }}
+                submitter={{
+                  submitButtonProps: {
+                    // loading: true,
+                    style: { ...primaryBtnSty },
+                  },
+                }}
+              >
+                <Typography>完善企业信息</Typography>
+                <Typography.Paragraph type="secondary" style={{ marginBottom: 24 }}>
+                  补充企业信息，开启专属数字化专业服务
+                </Typography.Paragraph>
+                <ProFormText
+                  name="name"
+                  label="企业名称"
+                  fieldProps={{
+                    maxLength: 50,
+                  }}
+                  rules={[
+                    {
+                      required: true,
+                      message: '请输入企业名称',
+                    },
+                  ]}
+                />
+                <ProFormSelect
+                  request={async () => {
+                    const { dicts } = await getEnterprisesDict({
+                      code: 'enterprises.employees.ranges',
+                    });
+                    if (dicts) {
+                      return dicts?.map((r: any) => ({
+                        ...r,
+                        label: r.value,
+                        value: r.extend,
+                      }));
+                    }
+                    return [
+                      // { label: '1 - 99人', value: '1' },
+                      // { label: '100 - 99人', value: '2' },
+                      // { label: '1000 - 9999人', value: '3' },
+                      // { label: '10000及以上', value: '4' },
+                    ];
+                  }}
+                  name="scale"
+                  label="团队规模"
+                  rules={[
+                    {
+                      required: true,
+                      message: '请选择团队规模',
+                    },
+                  ]}
+                />
+              </ModalForm>
+              <Button
+                style={{ ...ghostBtnSty }}
+                type="ghost"
+                shape="round"
+                // loading={}
+                onClick={() => {
+                  Modal.info({
+                    title: '请联系管理员申请加入企业',
+                    content: <div />,
+                    centered: true,
+                    onOk() {},
+                    okButtonProps: {
+                      style: { ...primaryBtnSty },
+                    },
+                  });
+                }}
+              >
+                加入企业
+              </Button>
+            </Space>
+          </div>
+          <div className="right">
+            <img alt="logo" className={styles.logo} src={welcomeBgm} />
+          </div>
+        </div>
+        <div className="bottom">
+          <Typography style={{ fontWeight: 500, fontSize: 24 }} className="mb16">
+            用科技引领建设行业新体验
+          </Typography>
+          <div className="feature">
+            <div className="feat1">重点功能1</div>
+            <div className="feat2">重点功能2</div>
+            <div className="feat3">重点功能3</div>
+            <div className="feat3">重点功能4</div>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
+export default Welcomme;

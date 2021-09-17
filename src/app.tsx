@@ -21,7 +21,7 @@ export const initialStateConfig = {
 export async function getInitialState(): Promise<{
   settings?: Partial<LayoutSettings>;
   currentUser?: API.CurrentUser;
-  enterpriseList?: { data: Record<string, any>[] };
+  enterpriseList?: Record<string, any>[];
   fetchUserInfo?: () => Promise<API.CurrentUser | undefined>;
   fetchEnterpriselist?: () => Promise<{ data: Record<string, any>[] }>;
 }> {
@@ -45,12 +45,13 @@ export async function getInitialState(): Promise<{
   // 如果是登录页面，不执行
   if (history.location.pathname !== loginPath) {
     const currentUser = await fetchUserInfo();
-    const enterpriseList = await fetchEnterpriselist();
+    const { data } = await fetchEnterpriselist();
+
     return {
       fetchUserInfo,
       currentUser,
       fetchEnterpriselist,
-      enterpriseList,
+      enterpriseList: data,
       settings: {},
     };
   }

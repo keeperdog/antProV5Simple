@@ -20,8 +20,8 @@
   },
   {
     path: '/welcome',
-    layout: true,
-    // headerRender: true,
+    layout: false,
+    // headerRender: false,
     // menuHeaderRender: false,
     // menuRender: false,
     name: 'welcome',
