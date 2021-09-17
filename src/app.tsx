@@ -4,7 +4,7 @@ import type { RunTimeLayoutConfig } from 'umi';
 import { history } from 'umi';
 import RightContent from '@/components/RightContent';
 import Footer from '@/components/Footer';
-import { getUserInfo } from './services/ant-design-pro/login';
+import { getUserInfo, getEnterprisesList } from './services/ant-design-pro/login';
 // import { BookOutlined, LinkOutlined } from '@ant-design/icons';
 
 // const isDev = process.env.NODE_ENV === 'development';
@@ -21,7 +21,9 @@ export const initialStateConfig = {
 export async function getInitialState(): Promise<{
   settings?: Partial<LayoutSettings>;
   currentUser?: API.CurrentUser;
+  enterpriseList?: { data: Record<string, any>[] };
   fetchUserInfo?: () => Promise<API.CurrentUser | undefined>;
+  fetchEnterpriselist?: () => Promise<{ data: Record<string, any>[] }>;
 }> {
   const fetchUserInfo = async () => {
     try {
@@ -31,17 +33,30 @@ export async function getInitialState(): Promise<{
     }
     return undefined;
   };
+
+  const fetchEnterpriselist = async () => {
+    try {
+      return await getEnterprisesList();
+    } catch (error) {
+      history.push(loginPath);
+    }
+    return undefined;
+  };
   // 如果是登录页面，不执行
   if (history.location.pathname !== loginPath) {
     const currentUser = await fetchUserInfo();
+    const enterpriseList = await fetchEnterpriselist();
     return {
       fetchUserInfo,
       currentUser,
+      fetchEnterpriselist,
+      enterpriseList,
       settings: {},
     };
   }
   return {
     fetchUserInfo,
+    fetchEnterpriselist,
     settings: {},
   };
 }
