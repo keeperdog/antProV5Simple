@@ -12,6 +12,7 @@ export default () => {
 
   return (
     <DefaultFooter
+      style={{ backgroundColor: 'white' }}
       copyright={`${currentYear} 金地科技出品`}
       links={
         [

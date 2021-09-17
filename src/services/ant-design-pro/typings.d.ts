@@ -62,10 +62,23 @@ declare namespace API {
   };
 
   type LoginParams = {
-    username?: string;
-    password?: string;
-    autoLogin?: boolean;
-    type?: string;
+    userName: string;
+    mobile: string;
+    captcha: string;
+
+    phone: string;
+    smsType: 'register' | 'resetPasswordByPhone';
+    smsCode: string;
+    name: string;
+
+    userId: string;
+    appName?: string;
+
+    loginType: 'byPhone';
+    password: string;
+    loginPassword: string;
+    identify: string;
+    remember: boolean;
   };
 
   type ErrorResponse = {

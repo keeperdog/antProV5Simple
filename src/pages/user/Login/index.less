@@ -1,4 +1,5 @@
 @import '~antd/es/style/themes/default.less';
+
 @layout-body-background: white;
 
 .container {
@@ -7,75 +8,163 @@
   height: 100vh;
   overflow: auto;
   background: @layout-body-background;
-}
 
-.lang {
-  width: 100%;
-  height: 40px;
-  line-height: 44px;
-  text-align: right;
-  :global(.ant-dropdown-trigger) {
-    margin-right: 24px;
-  }
-}
-
-.content {
-  flex: 1;
-  padding: 32px 0;
-}
-
-.top {
-  text-align: center;
-}
-
-.header {
-  height: 44px;
-  line-height: 44px;
-  a {
-    text-decoration: none;
-  }
-}
-
-.logo {
-  height: 44px;
-  margin-right: 16px;
-  vertical-align: top;
-}
-
-.title {
-  position: relative;
-  top: 2px;
-  color: @heading-color;
-  font-weight: 600;
-  font-size: 33px;
-  font-family: Avenir, 'Helvetica Neue', Arial, Helvetica, sans-serif;
-}
-
-.desc {
-  margin-top: 12px;
-  margin-bottom: 40px;
-  color: @text-color-secondary;
-  font-size: @font-size-base;
-}
-
-.main {
-  width: 328px;
-  margin: 0 auto;
-  @media screen and (max-width: @screen-sm) {
-    width: 95%;
-    max-width: 328px;
-  }
-
-  .icon {
-    margin-left: 16px;
-    color: rgba(0, 0, 0, 0.2);
-    font-size: 24px;
-    vertical-align: middle;
-    cursor: pointer;
-    transition: color 0.3s;
-
-    &:hover {
-      color: @primary-color;
+  .header {
+    display: flex;
+    justify-content: space-between;
+    padding: 16px 16px 0;
+    .logo {
+      height: 44px;
     }
+    .lang {
+      width: 100%;
+      height: 44px;
+      line-height: 44px;
+      text-align: right;
+      :global(.ant-dropdown-trigger) {
+        margin-right: 24px;
+      }
+    }
+  }
+
+  .content {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+    .left {
+      width: 612px;
+      height: 531px;
+      background: url('../../../assets/login_bgm.png') -1px -1px no-repeat;
+    }
+    .right {
+      width: 547px;
+      height: 756px;
+      margin-left: -90px;
+      padding: 75px 90px 0 90px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 10px 47px -8px rgba(218, 218, 218, 0.5);
+      :global {
+        .ant-result-success .ant-result-icon > .anticon {
+          color: #00d2b2;
+        }
+        .box-container div {
+          width: 54px;
+          height: 54px;
+          font-size: 24px;
+          background: #fff;
+          border: 1px solid #d9d9d9;
+          border-radius: 2px;
+        }
+        .row2 {
+          margin-bottom: 46px;
+        }
+        .icon1 {
+          position: absolute;
+          color: rgb(0, 210, 178);
+          transform: translateX(40px);
+        }
+        .text1 {
+          overflow: hidden;
+          color: rgba(51, 50, 0, 1);
+          font-size: 42px;
+          font-family: PingFangSC-Thin;
+          line-height: 59px;
+          text-overflow: ellipsis;
+        }
+        .text2 {
+          overflow: hidden;
+          color: rgba(44, 123, 229, 1);
+          font-size: 42px;
+          font-family: PingFangSC-Regular;
+          line-height: 59px;
+          text-overflow: ellipsis;
+        }
+        .text3 {
+          overflow: hidden;
+          color: rgba(51, 50, 0, 1);
+          font-size: 14px;
+          font-family: PingFangSC-Regular;
+          line-height: 20px;
+          text-overflow: ellipsis;
+        }
+        .text4 {
+          overflow: hidden;
+          color: rgba(44, 123, 229, 1);
+          font-size: 14px;
+          font-family: PingFangSC-Regular;
+          line-height: 20px;
+          text-overflow: ellipsis;
+          cursor: pointer;
+        }
+        .text5 {
+          color: #333;
+          font-weight: 600;
+          font-size: 42px;
+          font-family: PingFangSC-Semibold, PingFang SC;
+          line-height: 59px;
+        }
+        .text6 {
+          height: 59px;
+          color: #1890ff;
+          font-weight: 400;
+          font-size: 14px;
+          font-family: PingFangSC-Regular, PingFang SC;
+          line-height: 59px;
+        }
+        .text7 {
+          height: 24px;
+          color: rgba(0, 0, 0, 0.85);
+          font-weight: 500;
+          font-size: 24px;
+          font-family: PingFangSC-Medium, PingFang SC;
+          line-height: 24px;
+        }
+        .text8 {
+          height: 22px;
+          margin: 16px 0;
+          color: rgba(0, 0, 0, 0.45);
+          font-weight: 400;
+          font-size: 16px;
+          font-family: PingFangSC-Regular, PingFang SC;
+          line-height: 22px;
+        }
+        .text9 {
+          height: 22px;
+          margin-top: 32px;
+          color: #bfbfbf;
+          font-weight: 400;
+          font-size: 16px;
+          font-family: PingFangSC-Regular, PingFang SC;
+          line-height: 22px;
+          text-align: center;
+        }
+        .text10 {
+          height: 28px;
+          margin: 0 -10px;
+          margin-bottom: 16px;
+          color: rgba(0, 0, 0, 0.85);
+          font-weight: 500;
+          font-size: 20px;
+          font-family: PingFangSC-Medium, PingFang SC;
+          line-height: 28px;
+          white-space: nowrap;
+        }
+        .text11 {
+          height: 17px;
+          margin-right: 16px;
+          color: #660;
+          font-weight: 400;
+          font-size: 12px;
+          font-family: PingFangSC-Regular, PingFang SC;
+          line-height: 17px;
+        }
+      }
+    }
+  }
+
+  .footer {
+    background: @layout-body-background;
   }
 }
